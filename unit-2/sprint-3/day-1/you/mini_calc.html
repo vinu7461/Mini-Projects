@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>minicalculater</title>
+</head>
+<body>
+    <input type="number" placeholder="enter 1st Number" id="first">
+    <input type="number" placeholder="enter 2nd Number" id="second">
+    <p id="result">display result here</p>
+
+    <button onclick="addition()">Add</button>
+    <button onclick="subtract()">Subtract</button>
+    <button onclick="multiply()">Multiply</button>
+    <button onclick="divide()">Divide</button>
+</body>
+</html>
+<script>
+    function addition(){
+        
+        let a=document.getElementById("first").value;
+        
+        let b=document.getElementById("second").value;
+      
+     let sum=Number(a) + Number(b)
+
+        document.getElementById("result").innerText= sum;
+
+    }
+    function subtract() {
+        let a=document.getElementById("first").value;
+        
+        let b=document.getElementById("second").value;
+
+        let sub= Number(a) - Number(b)
+        document.getElementById("result").innerText= sub;
+
+    }
+    
+    function multiply() {
+        let a=document.getElementById("first").value;
+        
+        let b=document.getElementById("second").value;
+
+        let multi= Number(a) * Number(b)
+        document.getElementById("result").innerText= multi;
+    }
+
+    function divide() {
+        let a=document.getElementById("first").value;
+        
+        let b=document.getElementById("second").value;
+
+        let div= Number(a) / Number(b)
+        document.getElementById("result").innerText= div;
+    }
+</script>
