@@ -1,0 +1,202 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+<style>
+    #min{
+        width: 40%;
+        
+        margin: auto;
+        display: flex;
+        justify-content: space-evenly;
+    }
+    #min>div{
+        margin: auto;
+        text-align: center;
+    
+    
+    }
+    #min>div:nth-child(1)>div{
+        background-color: red;
+        width: 80px;
+        height: 50px;
+        margin: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+    }
+    #min>div:nth-child(2)>div{
+        background-color:green;
+        width: 80px;
+        height: 50px;
+        margin: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+    }
+#display{
+    width: 60%;
+    margin: auto;
+    text-align: center;
+
+}
+#display>div{
+    width: 30%;
+    height: 100px;
+    background-color:grey;
+    border: 1px solid black;
+    margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+#num{
+    width: 30%;
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    grid-template-rows: repeat(4,1fr);
+    gap: 20px;
+    margin: auto;
+    margin-left: 575px;
+    margin-top: 50px;
+    
+}
+#num>div{
+    width: 30%;
+    height: 110%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+#num>div:nth-child(1){
+    background-color: green;
+    
+}
+#num>div:nth-child(3){
+    background-color: green;
+    
+}
+#num>div:nth-child(7){
+    background-color: green;
+    
+}
+#num>div:nth-child(9){
+    background-color: green;
+    
+}
+#num>div:nth-child(2){
+    background-color: orange;
+
+}
+#num>div:nth-child(4){
+    background-color: orange;
+
+
+}
+#num>div:nth-child(5){
+    background-color: orange;
+    
+}
+#num>div:nth-child(6){
+    background-color: orange;
+
+}
+#num>div:nth-child(8){
+    background-color:orange;
+    
+}
+#num>div:nth-child(10){
+    background-color:purple;
+    
+}
+button{
+    width: 100px;
+    height: 30px;
+    background-color: black;
+    margin-left: 690px;
+    margin-top: 50px;
+    color: aliceblue;
+}
+
+
+</style>
+</head>
+<body>
+    <div id="min">
+        <div>
+            <div> <h2>241</h2></div>
+            <h2>min</h2>
+        </div>
+        <div id="max">
+            <div><h2>241</h2> </div>
+            <h2>max</h2>
+        </div>
+    </div>
+    <div id="display">
+        <p>SCORE</p>
+        <div><h1>#</h1></div>
+    </div>
+    <div id="num">
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+        <div>5</div>
+        <div>6</div>
+        <div>7</div>
+        <div>8</div>
+        <div>9</div>
+        
+        <div>0</div>
+
+    </div>
+    <button>Enter</button>
+    
+</body>
+</html>
+
+<script>
+
+    let keys= document.querySelectorAll("#num>div")
+
+    for(let i=0;i<keys.length;i++){
+        keys[i].addEventListener("click",myfunction)
+
+    } let bag=""
+    function myfunction(){
+        event.target.innerText
+        bag=bag+event.target.innerText
+        document.querySelector("#display>div>h1").innerText=bag
+    }
+
+    document.querySelector("button").addEventListener("click",mfunction)
+
+    function mfunction(){
+        let min=document.querySelector("#min>div>div>h2").innerText
+        let max=document.querySelector("#max>div>h2").innerText
+        
+        if(Number(bag)<min){
+            document.querySelector("#min>div>div>h2").innerText= Number(bag)
+            bag=""
+            document.querySelector("#display>div>h1").innerText=bag
+        }if(Number(bag)>max){
+            document.querySelector("#min>div:nth-child(2)>div>h2").innerText=Number(bag)
+           bag=""
+           document.querySelector("#display>div>h1").innerText=bag
+        }
+        if(Number(bag)>min && Number(bag)<max){
+            bag=""
+            document.querySelector("#display>div>h1").innerText=bag
+        }
+    }
+</script>
