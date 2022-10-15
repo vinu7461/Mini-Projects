@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>U2C3 Mock</title>
+    <style>
+      #report{
+        width: 90%;
+        display: flex;
+        margin: auto;
+        justify-content: space-evenly;
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
+        grid-template-rows: auto;
+        gap: 10px;
+        
+      }
+      #report>div{
+        width: 70%;
+        box-shadow: 3px 3px 3px 3px grey;
+        margin: auto;
+        margin-top: 100px;
+        
+      }
+      div>h1{
+        margin-left: 20px;
+        margin-bottom: 20px;
+      }
+
+        div>p{
+        margin-left: 20px;
+        margin-bottom: 20px;
+      }
+      
+      div>button{
+        margin-left: 20px;
+        margin-bottom: 20px;
+      }
+      
+      div>h3{
+        
+        margin-left: 20px;
+        margin-bottom: 20px;
+      }  
+       
+    </style>
+  </head>
+  <body>
+    <form>
+      <select id="month">
+        <option value="January">JANUARY</option>
+        <option value="February">FEB</option>
+        <option value="MARCH">MARCH</option>
+        <option value="APRIL">APRIL</option>
+        <option value="MAY">MAY</option>
+        <option value="JUNE">JUNE</option>
+        <option value="JULY">JULY</option>
+        <option value="AUGUST">AUGUST</option>
+        <option value="SEPETEMBER">SEPETEMBER</option>
+        <option value="OCTOBER">OCTOBER</option>
+        <option value="NOVEMBER">NOVEMBER</option>
+        <option value="DECEMBER">DECEMBER</option>
+      </select>
+
+      <input id="income" type="number" placeholder="Enter Income" />
+
+      <input id="expense" type="number" placeholder="Enter expense" />
+
+      <input type="submit" />
+    </form>
+
+    <div id="report">
+          <!-- Append your cards here -->
+    </div>
+  </body>
+</html>
+
+<script>
+  
+  document.querySelector("form").addEventListener("submit",myfunction)
+
+  function myfunction(event){
+     event.preventDefault()
+    
+   let month= document.querySelector("#month").value
+   let inc= document.querySelector("#income").value
+   let exp= document.querySelector("#expense").value
+
+   let small=document.createElement("div")
+
+   let m=document.createElement("h1")
+   m.innerText=month
+   let i=document.createElement("p")
+   i.innerText=inc
+   let e=document.createElement("p")
+   e.innerText=exp
+   let r=document.createElement("h3")
+
+   let b=document.createElement("button")
+   b.innerText="Delect"
+     b.addEventListener("click",dfunction)
+   
+   small.append(m,i,e,r,b)
+   document.querySelector("#report").append(small)
+
+
+   if(Number(inc)<Number(exp)){
+    r.innerText="DEBT"
+   r.style.color="red"
+   }if(Number(inc)>Number(exp)){
+       r.innerText="SAVE"
+       r.style.color="green"
+   }if(Number(inc)==Number(exp)){
+       r.innerText="BREAKEVEN"
+       r.style.color="orange"
+   }
+
+
+
+  }
+
+  function dfunction(event){
+      event.target.parentNode.remove()
+  }
+  
+</script>
