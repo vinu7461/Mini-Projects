@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+      <form action="">
+     
+        <input type="text" placeholder="Email" id="email">
+        <input type="password" placeholder="Password" id="pass">
+        <input type="submit" value="Login">
+        <a href="signup.html">Sign up</a>
+     
+
+      </form>
+</body>
+</html>
+
+<script>
+
+let userdata=JSON.parse(localStorage.getItem("userdata")) || []
+
+let userlogin=JSON.parse(localStorage.getItem("userlogin")) || []
+
+document.querySelector("form").addEventListener("submit",loginfun)
+
+function loginfun(){
+    event.preventDefault()
+    // if(userdata==[]){alert("no acc regestered with this email do signup")}
+    let obj={
+        email:document.querySelector("#email").value,
+        pass:document.querySelector("#pass").value
+    }
+    
+    let count=0
+        
+    userdata.forEach(function(elem,index){
+        
+        if(obj.email==elem.email){
+            if(obj.pass==elem.password){
+                alert("success")
+
+//    mens if condition
+              count++
+              elem.count="yes"
+              userlogin.push(elem)
+              localStorage.setItem("userlogin",JSON.stringify(userlogin))
+                window.location.href="navbar.html"
+                
+            }
+            else{alert("pass incorect")
+             count++}
+        }     
+        
+        })
+         if(count==0){alert("user not exists")}
+       
+        
+        
+    
+}
+
+
+</script>
