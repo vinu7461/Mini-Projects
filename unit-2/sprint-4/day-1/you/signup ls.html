@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        body{
+            background-color: blanchedalmond;
+        }
+        form{
+            box-shadow: 2px 2px 2px 2px sandybrown;
+            width: 40%;
+            margin: auto;
+            margin-top: 300px;
+            background-color: aliceblue;
+            padding: 10px;
+        }
+       form>input{
+        display: block;
+        width: 90%;
+        height: 30px;
+        margin: auto;
+        margin-top: 5px;
+       }
+       button{
+        width: 90%;
+        display: block;
+        margin: auto;
+       }
+       a{
+        display: block;
+        text-align:center;
+    
+       }
+        
+    </style>
+</head>
+<body>
+    
+    <form>
+        <input type="text" placeholder="Enter Name" id="name">
+        <input type="text" placeholder="Enter Email" id="email">
+        <input type="password" placeholder="Password" id="pass">
+        <button>SIGN UP</button>
+        <a href="login.html"> login</a>
+
+    </form>
+</body>
+</html>
+
+<script>
+ 
+let user= JSON.parse(localStorage.getItem("userdata")) || []
+
+ document.querySelector("form").addEventListener("submit",signupfun)
+
+ 
+ function signupfun (){
+    event.preventDefault()
+
+     
+    
+
+  
+   let data={
+        name:document.querySelector("#name").value,
+        email:document.querySelector("#email").value,
+        password:document.querySelector("#pass").value
+    }
+
+
+  
+
+   if(emailcheck(data.email)===true){
+
+    user.push(data)
+  localStorage.setItem("userdata",JSON.stringify(user))
+alert("sign up success do sign in")}
+  else{alert("account already exists")}
+ }
+ 
+ function emailcheck(email){
+
+    
+    let filtered=user.filter(function(elem){
+        
+       
+        return email===elem.email
+    })
+    if(filtered.length>0){return false}
+    else{return true}
+   }
+
+
+
+
+
+
+
+
+
+
+
+// let form= document.querySelector("form")
+// let userdata= JSON.parse(localStorage.getItem("userdata")) || [];
+
+// form.addEventListener("submit",function(event){
+//     event.preventDefault()
+//     let data={
+//         name:form.name.value,
+//         email:form.email.value,
+//         password:form.pass.value
+//     }
+//      if(checkemail(data.email)===true){
+//        userdata.push(data);
+//        localStorage.setItem("userdata",JSON.stringify(userdata))}
+//        else{alert("exists")}
+//     }
+// )
+
+// function checkemail(email){
+//     // let userdata= JSON.parse(localStorage.getItem("userdata")) || [];
+
+//     let filtered = userdata.filter(function(elem){
+//         return email===elem.email;
+//     })
+//     if(filtered.length>0){
+//         return false
+//     }
+//     else{return true}
+// }
+</script>
