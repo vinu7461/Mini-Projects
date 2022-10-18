@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+</html>
+
+<script>
+
+let usercart=JSON.parse(localStorage.getItem("cart"))
+
+
+
+for(let i=0;i<usercart.length;i++){
+    
+    for(let j=i+1;j<usercart.length;j++){
+        
+         if(usercart[i]["image_url"]===usercart[j]["image_url"]){
+            
+            
+            usercart.splice(j)
+            
+
+           
+         } 
+        }  
+}         
+
+
+
+let div1=document.createElement("div")
+        div1.setAttribute("id","container")
+
+    usercart.forEach(function(elem,index){
+    
+        
+        
+       
+
+        let div=document.createElement("div")
+
+        let image=document.createElement("img")
+      image.setAttribute("src",elem.image_url)
+
+      let name=document.createElement("h5")
+      name.innerText=elem.name
+      
+
+      let quantity=document.createElement("h4")
+      quantity.innerText="quantity"
+     
+
+
+      let price=document.createElement("h5")
+      price.innerText=elem.price
+
+
+      div.append(image,name,quantity,price)
+      div1.append(div)
+      document.querySelector("body").append(div1)
+
+    })
+
+
+
+</script>
