@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        h1{
+            
+        }
+    </style>
+
+    <style>
+
+        #container{
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            grid-template-rows: auto;
+            margin-top: 100px;
+        }
+    </style>
+</head>
+<body>
+        
+</body>
+</html>
+
+
+<script>
+
+let usercart= JSON.parse(localStorage.getItem("cart")) 
+
+ let total=0;
+
+
+ 
+ let totall=document.createElement("h1")
+ totall.innerText=0
+
+ let promo=document.createElement("input")
+ promo.setAttribute("type","text")
+ promo.setAttribute("placeholder","redeem code")
+
+let button=document.createElement("button")
+button.innerText="redeem"
+button.addEventListener("click",function(){
+    promofun(promo.value,total)
+})
+
+    let container=document.createElement("div")
+    container.setAttribute("id","container")
+
+    usercart.forEach(function(elem,index){
+        
+   
+        let div=document.createElement("div")
+   
+        let image=document.createElement("img")
+        image.setAttribute("src",elem.image_url)
+         
+
+        let h5=document.createElement("h5")
+        h5.innerText=elem.name
+
+        let h6=document.createElement("h5")
+        h6.innerText=elem.newprice||elem.price
+
+        
+        if(elem.newprice==undefined){
+            total=total+elem.price
+           }else{total=total+elem.newprice}
+         
+        
+
+        let select=document.createElement("select")
+
+        select.addEventListener("change",function(){
+           
+           h6.innerText= quantfun(elem,select.value)
+            
+           elem.newprice=quantfun(elem,select.value)
+
+          
+         
+           h6.innerText=newprice
+           elem.quant=select.value
+
+           localStorage.setItem("cart",JSON.stringify(usercart))
+
+            window.location.reload()
+        
+        })
+
+        let option=document.createElement("option")
+        option.innerText=elem.quant || 1
+
+        let option2=document.createElement("option")
+        option2.setAttribute("value","1")
+        option2.innerText=1
+
+        let option3=document.createElement("option")
+        option3.setAttribute("value","2")
+        option3.innerText=2
+
+
+        let option4=document.createElement("option")
+        option4.setAttribute("value","3")
+        option4.innerText=3
+
+
+        let option5=document.createElement("option")
+        option5.setAttribute("value","4")
+        option5.innerText=4
+
+
+
+       
+
+
+        let quantity=document.createElement("h5")
+        quantity.innerText="quantity"
+
+
+        let del=document.createElement("button")
+        del.innerText="delect"
+        del.addEventListener("click",function(){
+           delfun(elem,index)
+            
+        })
+        select.append(option,option2,option3,option4,option5)
+           div.append(image,h5,h6,quantity,select,del)
+         container.append(div)
+         document.querySelector("body").append(totall,promo,button,container)
+    })
+
+    totall.innerText=total
+   function promofun(code,total){
+    if(code=="masai30"){
+      let  comm=total%30
+      console.log(total)
+       console.log(total/3)
+       
+        total=total-(total/3)
+        totall.innerText=total 
+    }else{ totall.innerText=total}
+
+
+   }
+
+    
+
+   
+
+    function delfun(elem,index){
+         event.target
+
+         usercart.splice(index,1)
+         localStorage.setItem("cart",JSON.stringify(usercart))
+         window.location.reload()
+     }
+        let flag=false
+   function quantfun(elem,quant){
+  return newprice=elem.price*quant
+     flag=true
+    
+   }
+
+
+</script>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+      
+    <style>
+
+
+    #container{
+        
+        margin: auto;
+        display: grid;
+        grid-template-columns: repeat(4,1fr);
+        grid-template-rows: auto;
+        gap: 30px
+        
+
+
+    }
+    
+
+    </style>
+</head>
+<body>
+    
+</body>
+</html>
+
+<script>
+
+
+
+ 
+
+let h1=document.createElement("h1")
+h1.innerText="Mens Page"
+let a=document.createElement("a")
+a.setAttribute("href","cart.html")
+a.innerText="my cart"
+
+    let mensData = [
+
+
+    {
+      image_url:
+        "https://content.shop4reebok.com/static/Product-EX4296/reebok_EX4296_1.jpg.plp",
+      name: "MEN'S REEBOK RUNNING ROADMAP SHOES",
+      price: "1170",
+      strikedoffprice: "$2599",
+      id:"1"
+    },
+    {
+      image_url:
+        "https://content.shop4reebok.com/static/Product-EX3921/reebok_EX3921_1.jpg.plp",
+      name: "MEN'S REEBOK SWIM ARUBA FLIP SLIPPERS ",
+      price: 699,
+      strikedoffprice: 999,
+      id:"2"
+    },
+    {
+      image_url:
+        "https://content.shop4reebok.com/static/Product-EX4160/reebok_EX4160_1.jpg.plp",
+      name: " MEN'S REEBOK RUNNING AUSTIN SHOES",
+      price: 945,
+      strikedoffprice: 2099,
+      id:"3"
+    },
+    {
+      image_url:
+        "https://content.shop4reebok.com/static/Product-FV8798/MEN_SWIM_SLIPPERS_FV8798_1.jpg.plp",
+      name: "MEN'S REEBOK SWIM AVENGER FLIP LP SLIPPERS",
+      price: 399,
+      strikedoffprice: 799,
+      id:"4"
+    },
+    {
+      image_url:
+        "https://content.shop4reebok.com/static/Product-EW5173/reebok_EW5173_1.jpg.plp",
+      name: "MEN'S SHOES ",
+      price: 1620,
+      strikedoffprice: 3599,
+      id:"5"
+    },
+    {
+      image_url:
+        "https://content.shop4reebok.com/static/Product-FV7329/reebok_FV7329_1.jpg.plp ",
+      name: " MEN'S REEBOK RUNNING ASTRO BOOSTER SHOES ",
+      price: 1440,
+      strikedoffprice: 3199,
+      id:"6"
+    },
+    {
+      image_url:
+        "https://content.shop4reebok.com/static/Product-GD8567/MEN_TRAINING_PANTS_GD8567_1.jpg.plp ",
+      name: " MEN'S TRAINING WORKOUT READY ELITAGE PANTS ",
+      price: 1999,
+      strikedoffprice: 3199,
+      id:"7"
+    },
+    
+    {
+      image_url:
+        "https://content.shop4reebok.com/static/Product-HC3528/reebok_HC3528_1.jpg.plp",
+      name: "MEN'S REEBOK TRAINING ACTIVE BASIC POLO TEE",
+      price: 779,
+      strikedoffprice: 1299,
+      id:"8"
+    },
+    {
+      image_url:
+        "https://content.shop4reebok.com/static/Product-HF3794/reebok_HF3794_01.JPG.plp ",
+      name: "MEN'S REEBOK TRAINING ACTIVE MOVE TEE ",
+      price: 1749,
+      strikedoffprice: 2499,
+      id:"9"
+    },
+    {
+      image_url:
+        "https://content.shop4reebok.com/static/Product-HG5456/reebok_HG5456_1.jpg.plp",
+      name: "MEN'S REEBOK FITNESS TRAINING  SWEATSHIRT",
+      price: 1079,
+      strikedoffprice: 1799,
+      id:"10"
+    },
+  ];
+
+
+  let container=document.createElement("div")
+container.setAttribute("id","container")
+ let usercart= JSON.parse(localStorage.getItem("cart")) || [];
+ mensData.forEach(function (elem,index){
+  
+    let div=document.createElement("div")
+
+    let image=document.createElement("img")
+      image.setAttribute("src",elem.image_url)
+
+      let name=document.createElement("h5")
+      name.innerText=elem.name
+
+      let price=document.createElement("h5")
+      price.innerText=elem.price
+
+      let strik=document.createElement("h5")
+      strik.innerText=elem.strikedoffprice
+
+
+
+      let button=document.createElement("button")
+      button.innerText="Add to cart"
+      button.addEventListener("click",function(){
+
+        addfun(elem,index)
+      })
+
+      
+
+      div.append(image,name,price,strik,button)
+      container.append(div)
+
+      
+      document.querySelector("body").append(h1,a,container)
+
+ })
+ 
+ 
+ function addfun(elem,index){
+   let flag=false
+  for(let i=0;i<usercart.length;i++){
+    if(usercart[i]["id"]==elem["id"]){
+       flag=true
+    }
+  }
+  if(flag==true){
+    alert("already exists in cart")
+  }else{
+    usercart.push(elem)
+    localStorage.setItem("cart",JSON.stringify(usercart))
+  }
+  
+ }
+
+
+</script>
