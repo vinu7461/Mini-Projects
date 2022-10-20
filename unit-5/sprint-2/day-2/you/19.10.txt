@@ -1,0 +1,617 @@
+
+2.update:
+---------------
+
+--it is used to update the data within the table.
+
+ex1: updating all the marks for all the students;
+
+>update student set marks = marks+50;
+
++------+------+---------+-------+
+| roll | name | address | marks |
++------+------+---------+-------+
+|   20 | p    | yav     |    50 |
+|   30 | n    | nag     |    50 |
+|   10 | vn   | pune    |    50 |
++------+------+---------+-------+
+
+ex2: updating marks for only one student: here we need to use 'where' clause.
+
+>update student set marks = marks+50 where roll=10;
+
++------+------+---------+-------+
+| roll | name | address | marks |
++------+------+---------+-------+
+|   20 | p    | yav     |    50 |
+|   30 | n    | nag     |    50 |
+|   10 | vn   | pune    |   100 |
++------+------+---------+-------+
+
+>update student set marks = marks+50 where name='Sunil';
+
+>update student set marks = marks+50 where marks <= 700;
+
+> update student set marks = marks+50, name='amit kumar' where name='p';
+
++------+------------+---------+-------+
+| roll | name       | address | marks |
++------+------------+---------+-------+
+|   20 | amit kumar | yav     |   120 |
+|   30 | n          | nag     |    50 |
+|   10 | vn         | pune    |   100 |
++------+------------+---------+-------+
+
+>update student set marks=500 where marks IS NULL;
+
+
+
+3.delete:
+------------
+
+--it is used to delete the records/rows from the table.
+
+>delete from student; //it will delete entire record from the table like 
+truncate command.
+
+(this delete command we can rollback inside the transactional area, whereas truncate command we can not rollback).
+
+>delete from student where sname IS NULL;
+
+
+DRL (select)
+============
+
+--this command is used to quering a DB table.
+
+syntax:
+----------
+
+select col1,col2,...
+from tablename(s)
+where condition
+group by colname
+having condition
+order by colname [asc/desc] 
+
+ex1:
+
+>select * from student; // all the columns and all the rows
+
+
+ex2: restricting the number of rows by using where condition.
+
+>select * from student where roll=20;
+
++------+------------+---------+-------+
+| roll | name       | address | marks |
++------+------------+---------+-------+
+|   20 | amit kumar | yav     |   120 |
++------+------------+---------+-------+
+
+select (projecting columns )
+from (from which tables(s) )
+where (condition )
+
+>select name from student;
+
+> select name,roll from student;
++------------+------+
+| name       | roll |
++------------+------+
+| amit kumar |   20 |
+| n          |   30 |
+| vn         |   10 |
++------------+------+
+
+>select name from student where roll=20;
++------------+
+| name       |
++------------+
+| amit kumar |
++------------+
+
+>select sname,roll from student where marks > 700;
+
+
+
+using order by clause:  to sort the records.
+---------------------------
+
+> select * from student order by marks;
++------+------------+---------+-------+
+| roll | name       | address | marks |
++------+------------+---------+-------+
+|   30 | n          | nag     |    50 |
+|   10 | vn         | pune    |   100 |
+|   20 | amit kumar | yav     |   120 |
++------+------------+---------+-------+
+
+> select marks,name from student order by marks desc;
+
++-------+------------+
+| marks | name       |
++-------+------------+
+|   120 | amit kumar |
+|   100 | vn         |
+|    50 | n          |
++-------+------------+
+
+Operators:
+==========
+
+1. Arithmatic operators (*,/, + , -, %)
+
+Note: mostly arithmatic operators are used after the select statements 
+(90%) and all other operators  are used in 'where clause' only.
+
+
+2. relational operators: (= , >, <, <=, >= [!=  or <>])
+
+3.logical operators (AND, OR, NOT)
+
+4. Special Operators (IN ,IS NULL, LIKE, BETWEEN, etc...)
+
+
+examples:
+
+Arithmatic operators:
+
+>select name,marks, marks+100 from student;
++------------+-------+-----------+
+| name       | marks | marks+100 |
++------------+-------+-----------+
+| amit kumar |   120 |       220 |
+| n          |    50 |       150 |
+| vn         |   100 |       200 |
++------------+-------+-----------+
+
+> select name,marks, marks+100 Gracemarks from student;
++------------+-------+------------+
+| name       | marks | Gracemarks |
++------------+-------+------------+
+| amit kumar |   120 |        220 |
+| n          |    50 |        150 |
+| vn         |   100 |        200 |
++------------+-------+------------+
+
+Note: this temparory name of a column we can not use inside where clause.
+
+mysql> select * from student;
++------+------------+---------+-------+
+| roll | name       | address | marks |
++------+------------+---------+-------+
+|   20 | amit kumar | yav     |   120 |
+|   30 | n          | nag     |    50 |
+|   10 | vn         | pune    |   100 |
++------+------------+---------+-------+
+
+Getting unique data( DISTINCT)
+============================
+
+BEFORE;>
+
+mysql> insert into student values(20,'p','was',50);
++------+------------+---------+-------+
+| roll | name       | address | marks |
++------+------------+---------+-------+
+|   20 | amit kumar | yav     |   120 |
+|   30 | n          | nag     |    50 |
+|   10 | vn         | pune    |   100 |
+|   20 | p          | was     |    50 |
++------+------------+---------+-------+
+
+>select  DISTINCT marks from student;
+
++-------+
+| marks |
++-------+
+|   120 |
+|    50 |
+|   100 |
++-------+
+
+Special Operators:
+=================
+
+IN ..... NOT IN
+
+BETWEEN ..... NOT BETWEEN
+
+IS NULL ..... IS NOT NULL
+
+LIKE ..... NOT LIKE
+
+
+>select * from student where marks IN(100,50);
++------+------+---------+-------+
+| roll | name | address | marks |
++------+------+---------+-------+
+|   30 | n    | nag     |    50 |
+|   10 | vn   | pune    |   100 |
+|   20 | p    | was     |    50 |
++------+------+---------+-------+
+
+>select * from student where marks BETWEEN 100 AND 150;
+or
+> select * from student where marks >=100 AND marks <= 150; 
+
++------+------------+---------+-------+
+| roll | name       | address | marks |
++------+------------+---------+-------+
+|   20 | amit kumar | yav     |   120 |
+|   10 | vn         | pune    |   100 |
++------+------------+---------+-------+
+
+LIKE ----> NOT LIKE:
+
+--it is used to retrive the data based on chrecter pattern.
+
+1. % ---> it represents string or group of charecters.
+
+2. _   ---> it represents a single charecter.
+
+
+ex:
+
+ select * from student where sname LIKE 'V%';  // name will start with V.
++------+------+---------+-------+
+| roll | name | address | marks |
++------+------+---------+-------+
+|   10 | vn   | pune    |   100 |
++------+------+---------+-------+
+
+ex: In name r can be any charecter.
+
+> select * from student where sname LIKE '%r%';
++------+------------+---------+-------+
+| roll | name       | address | marks |
++------+------------+---------+-------+
+|   20 | amit kumar | yav     |   120 |
+
+
+Constraints:
+=========
+
+--constraints are created on the columns of a table.
+
+--It prevents invalid data entry into our tables.
+
+1. not null
+
+2. unique
+
+3. primary key
+
+4. foreign key
+
+5. check : Check constraint will not be supported by the mysql.
+
+
+Note: some conatraints we can apply at column level and some contraints we can apply at table level.
+
+column level: where we define the column.
+not null,
+unique,
+primary key
+
+
+table level: after defining all the column.
+composit primary key (multi-column primary key)
+foreign key
+
+
+1. not null:
+---------------
+
+--null value is not allowed, that column value is mandatory.
+
+2. unique:
+-------------
+
+--to that column duplicate values are not allowed.
+
+--here we can insert null values, multiple time. // null is no value here so
+
+Note: whenever we define a unique constraint on a column then automatically DB engine will create an index on those columns. (searching based on unique column is super fast.)
+
+
+3. primary key:
+-------------------
+
+--here also DB engine will create index for that column.
+
+--value can not be null.
+--value can not be duplicate
+
+another diff with the PK and unique is: in one table we can have multiple 
+unique constraint but in one table we can have only one primary key.
+
+--if we want to apply PK on multiple column then it will become a composit key.
+
+***Note: with the help of the PK column we can uniquly identify one record in a table.
+
+
+COLUMN LEVEL CONSTRAINT;// where we are defining column;
+
+create table student
+(
+roll int primary key,
+name varchar(12) not null unique,// behave like pK
+address varchar(12) unique,
+marks int
+);
+
+mysql> desc student;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| roll    | int         | NO   | PRI | NULL    |       |
+| name    | varchar(12) | NO   | UNI | NULL    |       |
+| address | varchar(12) | YES  | UNI | NULL    |       |
+| marks   | int         | YES  |     | NULL    |       |
+
+
+insert into student values(10,'ram','delhi',850);
+
+insert into student values(null,'ram','delhi',850);// error:- column roll cannot be null
+
+insert into student values(10,'ram','delhi',850);// error:- Duplicate entry 10 for key student primary
+
+insert into student values(12,'ram','delhi',850);// error:- Duplicate entry ram for key student primary
+
+insert into student values(12,'ramesh','pune',850);
+
++------+--------+---------+-------+
+| roll | name   | address | marks |
++------+--------+---------+-------+
+|   10 | ram    | delhi   |   850 |
+|   12 | ramesh | pune    |   850 |
++------+--------+---------+-------+
+
+
+TABLE LEVEL CONSTRAINT ;-
+
+composit key:
+-------------------
+
+
+teacher(tname, subject, age, phone, email);
+
+
+create table teacher(
+
+tname varchar(12),
+subject varchar(12),
+age int,
+phone varchar(10),
+email varchar(15),
+primary key(tname,subject));
+ // THIS IS TABLE LEVEL AFTER COMPLLETE ALL COLUMN DEFINE
+
+---here tname and subject will become a composit key, this combination can not be duplicate.
+
+desc teacher;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| tname   | varchar(12) | NO   | PRI | NULL    |       |
+| subject | varchar(12) | NO   | PRI | NULL    |       |
+| age     | int         | YES  |     | NULL    |       |
+| phone   | varchar(10) | YES  |     | NULL    |       |
+| email   | varchar(15) | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+here two pk is not there it means composit key;
+
+mysql> insert into teacher values('ravi','java',28,'8765446','ravi@132');
+
+mysql> insert into teacher values('ravi','spring',28,'8765446','ravi@132');
+
+mysql> insert into teacher values('ravi','spring',28,'8765446','ravi@132');// Duplicate entry 'ravi-spring' for key 'teacher.PRIMARY
+
+select * from teacher;
++-------+---------+------+---------+----------+
+| tname | subject | age  | phone   | email    |
++-------+---------+------+---------+----------+
+| ravi  | java    |   28 | 8765446 | ravi@132 |
+| ravi  | spring  |   28 | 8765446 | ravi@132 |
++-------+---------+------+---------+----------+
+
+
+
+Foreign key:
+=========
+
+--with the help of FK we inforce the refrential integrity.
+
+--with the help of FK we can establish relationship among 2 tables.
+
+--Second table FK must refer to the first table PK.
+
+--PK related FK column must belong to the same datatype but the column name can be different.
+
+--FK can accept the duplicate and null value also.
+
+Note: with the help of FK we can establish parent child relationship among tables.(one or multiple child)
+
+
+create table dept
+(
+did int primary key,
+dname varchar(12) not null,
+location varchar(12)
+);
+
+
+insert into dept values(10,'hr','pune');
+insert into dept values(12,'acc','delhi');
+insert into dept values(13,'sales','chennai');
+insert into dept values(14,'market','mumbai');
+
++-----+--------+----------+
+| did | dname  | location |
++-----+--------+----------+
+|  10 | hr     | pune     |
+|  12 | acc    | delhi    |
+|  13 | sales  | chennai  |
+|  14 | market | mumbai   |
++-----+--------+----------+
+
+create table emp
+(
+eid int primary key,
+ename varchar(12),
+address varchar(12),
+salary int,
+deptid int
+);
+
+NOTE - deptid stould be(10,12,13,14)only but it take anything now,but with FK we get referential integrity, then it reffer only did if dept table.then emp will become child and dept is parent table.(data type must be same);
+
+***lets achive the referential integrity:
+
+> drop table emp;
+
+
+create table emp
+(
+eid int primary key,
+ename varchar(12),
+address varchar(12),
+salary int,
+deptid int,
+foreign key (deptid) references dept(did)
+);
+
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| eid     | int         | NO   | PRI | NULL    |       |
+| ename   | varchar(12) | YES  |     | NULL    |       |
+| address | varchar(12) | YES  |     | NULL    |       |
+| salary  | int         | YES  |     | NULL    |       |
+| deptid  | int         | YES  | MUL | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+
+MUL--Foreign key
+
+insert into emp values(1000,'ravi', 'patna',85000,10);
+
+insert into emp values(2000,'manoj', 'patna',82000,50);//
+error cannot add child row foreign key conatraint fails;
+
+insert into emp values(3000,'mukesh', 'patna',83000,Null)//
+can assign null
+
+insert into emp values(4000,'amit', 'patna',83000,10);
+
++------+--------+---------+--------+--------+
+| eid  | ename  | address | salary | deptid |
++------+--------+---------+--------+--------+
+| 1000 | ravi   | patna   |  85000 |     10 |
+| 3000 | mukesh | patna   |  83000 |   NULL |
+| 4000 | amit   | patna   |  83000 |     10 |
++------+--------+---------+--------+--------+
+
+
+
+here dept table will act as a parent table
+and emp table will act as child table.
+
+--the table which contains the FK column will be considered as child table.
+
+
+****Note: whenever we try to establish a relationship using FK then DB violates following 2 rules:
+
+1. insertion in the the child table.(invalid record / ie. not ref parent)
+
+2.deletion or updation(refrence column) in the parent table (even we can not drop the parent table also)
+===========================================================
+ex.. mysql> drop table dept;
+ERROR 3730 (HY000): Cannot drop table 'dept' referenced by a foreign key constraint 'emp_ibfk_1' on table 'emp'.
+(first drop child then ont you can)
+
+ex..mysql> update dept set did=100 where did=10;
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`web19sb101db`.`emp`, CONSTRAINT `emp_ibfk_1` FOREIGN KEY (`deptid`) REFERENCES `dept` (`did`))
+
+ex...mysql> delete from dept where did=10;
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`web19sb101db`.`emp`, CONSTRAINT `emp_ibfk_1` FOREIGN KEY (`deptid`) REFERENCES `dept` (`did`))
+============================================================
+
+***to overcome this updation and deletion problem we should use 
+
+ON DELETE CASCADE
+or 
+ON DELETE SET NULL
+
+CASCADE--if you delete from parent then it automatic delete from its reffering child.
+
+SET NULL--if you use set null then value belong to child become null;
+
+simillarly for update also like
+
+ON UPDATE CASCADE
+or 
+ON UPDATE SET NULL
+
+--while creating the child table.
+
+>drop emp;
+
+create table emp
+(
+eid int primary key,
+ename varchar(12),
+address varchar(12),
+salary int,
+deptid int,
+foreign key (deptid) references dept(did) ON UPDATE CASCADE 
+);
+
+ insert into emp values(1000,'ravi', 'patna',85000,10);
+insert into emp values(4000,'amit', 'patna',83000,10);
+ insert into emp values(3000,'amit', 'patna',81000,12);
+
++------+-------+---------+--------+--------+
+| eid  | ename | address | salary | deptid |
++------+-------+---------+--------+--------+
+| 1000 | ravi  | patna   |  85000 |     10 |
+| 3000 | amit  | patna   |  81000 |     12 |
+| 4000 | amit  | patna   |  83000 |     10 |
++------+-------+---------+--------+--------+
+
+mysql> update dept set did=200 where did=10;
+
+mysql> select * from dept;
++-----+--------+----------+
+| did | dname  | location |
++-----+--------+----------+
+|  12 | acc    | delhi    |
+|  13 | sales  | chennai  |     // update from parent and
+|  14 | market | mumbai   |     //   child                       | 200 | hr     | pune     |
++-----+--------+----------+
+mysql> select * from emp;
++------+-------+---------+--------+--------+
+| eid  | ename | address | salary | deptid |
++------+-------+---------+--------+--------+
+| 1000 | ravi  | patna   |  85000 |    200 |
+| 3000 | amit  | patna   |  81000 |     12 |
+| 4000 | amit  | patna   |  83000 |    200 |
++------+-------+---------+--------+--------+
+
+adding a contraint to an existing table:
+-------------------------------------------------
+> create table a1(id int, name varchar(12));
+
+> alter table a1 modify id int primary key;
+
+NOTE-- if you want to add the PK later be sure that in your table not have duplicate data.
+
+adding foreign key to the existing table:
+--------------------------------------------------
+
+>create table b1(bid int);
+
+>alter table b1 add foreign key(bid) references a1(id) on delete set null;
+
+LEARN MORE--w3schools sql
