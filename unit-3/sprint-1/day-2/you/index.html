@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+    #cont{width: 60%;
+        margin: auto;
+        display: flex;
+    }
+        #cont>div{
+            width: 100px;
+            height: 100px;
+            font-size: 50px;
+          margin: auto;
+          text-align: center;
+        }
+        #winner{
+            margin:auto;
+            width: 150px;
+            height: 150px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 70px;
+        }
+        #roll{display: block;
+            margin: auto;
+            width: 30%;
+                  height: 20%;
+                margin-top: 20px;
+                background-color: blueviolet;
+                color: aliceblue;
+            }
+    </style>
+</head>
+<body>
+    <div id="winner"></div>
+    <div id="cont"> 
+        <div id="member-1"></div>
+    <div id="member-2"></div>
+    <div id="member-3"></div>
+</div>
+   
+   
+
+    <button id="roll" onclick="rolldice()">ROLL THE DICE</button>
+</body>
+</html>
+
+<script>
+
+function rolldice(){
+
+    let x=Math.floor(Math.random()*6+1)
+    document.querySelector("#member-1").innerText=x
+
+   
+    let y=Math.floor(Math.random()*6+1)
+    document.querySelector("#member-2").innerText=y
+
+
+    let z=Math.floor(Math.random()*6+1)
+    document.querySelector("#member-3").innerText=z
+
+if(x==y && y==z && x==z){
+  
+    document.querySelector("#member-1").style.backgroundColor="blue"
+    document.querySelector("#member-2").style.backgroundColor="blue"
+    document.querySelector("#member-3").style.backgroundColor="blue"
+    document.querySelector("#winner").innerText="draw"
+    document.querySelector("#winner").style.backgroundColor="pink"
+
+    }
+
+
+   else if(x==y){
+        if(z>x){
+            document.querySelector("#member-1").style.backgroundColor="blue"
+    document.querySelector("#member-2").style.backgroundColor="blue"
+    document.querySelector("#member-3").style.backgroundColor="green"
+    document.querySelector("#winner").innerText=z
+    document.querySelector("#winner").style.backgroundColor="pink"
+
+    
+        }
+        else{
+            document.querySelector("#member-1").style.backgroundColor="blue"
+    document.querySelector("#member-2").style.backgroundColor="blue"
+    document.querySelector("#member-3").style.backgroundColor="red"
+    document.querySelector("#winner").innerText=x
+    document.querySelector("#winner").style.backgroundColor="pink"
+
+
+
+    
+        }}
+
+
+      else if(x==z){
+        if(y>x){
+            document.querySelector("#member-1").style.backgroundColor="blue"
+    document.querySelector("#member-3").style.backgroundColor="blue"
+    document.querySelector("#member-2").style.backgroundColor="green"
+    document.querySelector("#winner").innerText=y
+    document.querySelector("#winner").style.backgroundColor="pink"
+
+    
+        }
+        else{
+            document.querySelector("#member-1").style.backgroundColor="blue"
+    document.querySelector("#member-3").style.backgroundColor="blue"
+    document.querySelector("#member-2").style.backgroundColor="red"
+    document.querySelector("#winner").innerText=x
+    document.querySelector("#winner").style.backgroundColor="pink"
+
+    
+        }}
+    
+
+
+       else if(z==y){
+        if(x>z){
+            document.querySelector("#member-2").style.backgroundColor="blue"
+    document.querySelector("#member-3").style.backgroundColor="blue"
+    document.querySelector("#member-1").style.backgroundColor="green"
+    document.querySelector("#winner").innerText=x
+    document.querySelector("#winner").style.backgroundColor="pink"
+
+    
+        }
+        else{
+            document.querySelector("#member-2").style.backgroundColor="blue"
+    document.querySelector("#member-3").style.backgroundColor="blue"
+    document.querySelector("#member-1").style.backgroundColor="red"
+    document.querySelector("#winner").innerText=y
+    document.querySelector("#winner").style.backgroundColor="pink"
+
+    
+        }}
+
+
+    //     if(x==z){
+    //     if(y>x){
+    //         document.querySelector("#member-1").style.backgroundColor="blue"
+    // document.querySelector("#member-3").style.backgroundColor="blue"
+    // document.querySelector("#member-2").style.backgroundColor="green"
+    
+    //     }
+    //     else{
+    //         document.querySelector("#member-1").style.backgroundColor="blue"
+    // document.querySelector("#member-3").style.backgroundColor="blue"
+    // document.querySelector("#member-2").style.backgroundColor="red"
+    
+    //     }}
+    
+
+   
+
+else if(x>y && y>z){
+    document.querySelector("#member-1").style.backgroundColor="green"
+    document.querySelector("#member-2").style.backgroundColor="yellow"
+    document.querySelector("#member-3").style.backgroundColor="red"
+    document.querySelector("#winner").innerText=x
+    document.querySelector("#winner").style.backgroundColor="pink"
+
+    
+}
+
+else if(x>z && z>y){
+    document.querySelector("#member-1").style.backgroundColor="green"
+    document.querySelector("#member-3").style.backgroundColor="yellow"
+    document.querySelector("#member-2").style.backgroundColor="red"
+    document.querySelector("#winner").innerText=x
+    document.querySelector("#winner").style.backgroundColor="pink"
+
+    
+}
+
+
+
+
+
+else if(y>x && x>z){
+    document.querySelector("#member-2").style.backgroundColor="green"
+    document.querySelector("#member-1").style.backgroundColor="yellow"
+    document.querySelector("#member-3").style.backgroundColor="red"
+    document.querySelector("#winner").innerText=y
+    document.querySelector("#winner").style.backgroundColor="pink"
+
+    
+}
+
+else if(y>z && z>x){
+    document.querySelector("#member-2").style.backgroundColor="green"
+    document.querySelector("#member-3").style.backgroundColor="yellow"
+    document.querySelector("#member-1").style.backgroundColor="red"
+    document.querySelector("#winner").innerText=y
+    document.querySelector("#winner").style.backgroundColor="pink"
+
+    
+}
+
+
+else if(z>x && x>y){
+    document.querySelector("#member-3").style.backgroundColor="green"
+    document.querySelector("#member-1").style.backgroundColor="yellow"
+    document.querySelector("#member-2").style.backgroundColor="red"
+    document.querySelector("#winner").innerText=z
+    document.querySelector("#winner").style.backgroundColor="pink"
+
+    
+}
+
+else if(z>y && y>x){
+    document.querySelector("#member-3").style.backgroundColor="green"
+    document.querySelector("#member-2").style.backgroundColor="yellow"
+    document.querySelector("#member-1").style.backgroundColor="red"
+    document.querySelector("#winner").innerText=z
+    document.querySelector("#winner").style.backgroundColor="pink"
+
+    
+}
+
+}
+
+
+</script>
