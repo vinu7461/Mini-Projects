@@ -1,0 +1,783 @@
+            functions in mysql:
+              ===============
+
+--it is used to solve a particular task.
+
+--a sql function must return a value.
+
+--in sql we have 2 types of functions:
+
+        1.predefined functions 
+        2.user-defined functions (PL/sql)
+
+1.predefined functions:
+===============
+
+--it is divided into 4 categories:
+
+
+1. number functions
+2. charecter functions
+3. group functions or aggregrate functions
+4.date functions
+
+
+1. number functions:
+--------------------------
+
+
+a. abs(): it returns the absolute number;
+
+ex:
+
+>select abs(-40)  from dual;//(dual is a psudo table(if you want to eval any expression you can use psudo table)
+or
+>select abs(-40); // dual not manditory in mysql
+
++----------+
+| abs(-40) |
++----------+
+|       40 |
++----------+
+
+b. mod(m,n) : it returns the reminder of m/n;
+
+ex:
+
+>select mod(10,2) from dual; 
++-----------+
+| mod(10,2) |
++-----------+
+|         0 |
++-----------+ 
+ 
+c. round(m,n)
+d.truncate(m,n);
+
+ex:
+>select round(12.343823,3) from dual; 
+
++--------------------+
+| round(12.343823,3) |
++--------------------+
+|             12.344 |
++--------------------+
+
+>select truncate(12.343823,3) from dual; 
+
++-----------------------+
+| truncate(12.343823,3) |
++-----------------------+
+|                12.343 |
++-----------------------+
+
+e. ceil()
+
+mysql> select ceil(22.7/2);
++--------------+
+| ceil(22.7/2) |
++--------------+
+|           12 |
++--------------+
+
+f. floor()
+
+
+greatest() least();
+----------------------
+
+--it will return biggest and smallest value from the list of arguments.
+
+ex:
+
+>select greatest(10,12,5, 9,5) from dual; // 12
+
+Note: from a single column if we want to get the max and min value then we should use group functions like 
+min(), max();
+
+
+2. charecter functions:
+----------------------------
+
+1. upper()
+2. lower()
+3. length()
+4. replace()
+5. concat()
+6. substr()
+
+>select name, length(name) len  from student;
+>select upper(name) from student;
+> select substr('ratan',3,2) from dual;// from 3 char get 2 char
++---------------------+
+| substr('ratan',3,2) |
++---------------------+
+| ta                  |
++---------------------+
+
+date function:
+------------------
+
+1. sysdate() :  it will return the current data and time.
+
+ex:
+
+>select sysdate();
+
++---------------------+
+| sysdate()           |
++---------------------+
+| 2022-10-21 15:48:18 |
++---------------------+
+
+2. date_format()
+
+>select date_format(sysdate(), '%d-%m-%Y');
+
++------------------------------------+
+| date_format(sysdate(), '%d-%m-%Y') |
++------------------------------------+
+| 21-10-2022                         |
++------------------------------------+
+
+mysql> select date_format(sysdate(), '%d-%M-%Y');
++------------------------------------+
+| date_format(sysdate(), '%d-%M-%Y') |
++------------------------------------+
+| 21-October-2022                    |
++------------------------------------+
+
+3. adddate() 
+
+syntx:
+
+adddate(date, INTERVAL value unit);
+
+units:-
+DAY
+HOUR
+YEAR
+MONTH
+WEEK
+
+ex:
+> select adddate(sysdate(), INTERVAL 3 DAY) from dual;
+
++------------------------------------+
+| adddate(sysdate(), INTERVAL 3 DAY) |
++------------------------------------+ // +3 days
+| 2022-10-24 15:53:35                |  
++------------------------------------+
+
+
+
+
+            group function or aggregrate functions:
+               ================================
+
+--these functions operates over several values of a single column and then results in a single value.
+
+1. max()
+2. min()
+3. avg()
+4. sum()
+5. count(*)  // it will count null value also
+6. count(columnname) // it will not count null values
+
+mysql> select * from student;
++------+--------+-------+
+| roll | name   | marks |
++------+--------+-------+
+|   10 | ram    |   850 |
+|   12 | ramesh |   850 |
+|   14 | amit   |   720 |
+|   15 | sunil  |   620 |
+|   16 | manoj  |   920 |
+|   20 | ashok  |   620 |
+|    2 | avii   |  NULL |
++------+--------+-------+
+> select max(marks) from student;
++------------+
+| max(marks) |
++------------+
+|        920 |
++------------+
+mysql> select sum(marks) sum from student;
++------+
+| sum  |
++------+
+| 4580 |
++------+
+
+> select count( DISTINCT marks) from student;
++------------------------+
+| count( DISTINCT marks) |
++------------------------+
+|                      4 |
++------------------------+
+
+mysql> select count(*) from student;
++----------+
+| count(*) |
++----------+   // * count null also
+|        7 |
++----------+   // marks will not count null only value
+
+mysql> select avg(marks) avg from student;
++----------+
+| avg      |
++----------+
+| 763.3333 |
++----------+
+
+
+                     group by clause:
+                    ==================
+
+--the main purpose of group by clause is to group the records/ rows. to operate on it
+
+--the clause is mostly used with the group functions only.
+
+--it is used to divide the simillar data items into set of logical groups
+
+short syntax:
+-------------
+
+select col_name(s) from table group by col_name(s); // not to use where cond.
+
+long syn:
+------------
+
+select col_names
+from 
+tablename
+[where condition] ---optional
+group by col_names
+[having <cond>] ---opt
+
+
+ex:
+
+
++------+---------+---------+--------+--------+
+| eid  | ename   | address | salary | deptid |
++------+---------+---------+--------+--------+
+| 1000 | ravi    | patna   |  85000 |     10 |
+| 1002 | amit    | delhi   |  82000 |     10 |
+| 1003 | mukesh  | pune    |  84000 |     12 |
+| 1004 | dinesh  | mumbai  |  78000 |     10 |
+| 1005 | manoj   | delhi   |  72000 |     12 |
+| 1006 | chnadan | pune    |  62000 |     12 |
+| 1007 | rakesh  | goa     |  82000 |     13 |
++------+---------+---------+--------+--------+
+
+
+--the above data is called as detailed data and after performing the group by , we will get summerized data which is usefull for analysis.
+
+> select sum(salary) from emp; // it will calculate the salary of whole emp.
++-------------+
+| sum(salary) |
++-------------+
+|      545000 |
++-------------+
+
+-- to calculate the sum of salaries dept wise :
+
+>select deptid, sum(salary) from emp group by deptid;
+
++--------+-------------+
+| deptid | sum(salary) |
++--------+-------------+
+|     10 |      245000 |
+|     12 |      218000 |
+|     13 |       82000 |
++--------+-------------+
+
+> select deptid,min(salary), max(salary),avg(salary) ,sum(salary) from emp group by deptid;
+
++--------+-------------+-------------+-------------+-------------+
+| deptid | min(salary) | max(salary) | avg(salary) | sum(salary) |
++--------+-------------+-------------+-------------+-------------+
+|     10 |       78000 |       85000 |  81666.6667 |      245000 |
+|     12 |       62000 |       84000 |  72666.6667 |      218000 |
+|     13 |       82000 |       82000 |  82000.0000 |       82000 |
++--------+-------------+-------------+-------------+-------------+
+
+
+rules:
+=====
+
+**1. group functions we can not use inside the where clause.
+
+ex--mysql> select * from emp where salary > avg(salary);
+ERROR 1111 (HY000): Invalid use of group function
+mysql>
+
+***2. other than group function all the columns mentioned inside the select clause should be there after the group by clause otherwise (oracle db will give an error, and mysql db may give unexpected result).
+
+ex:
+
+>select deptid,ename, min(salary), max(salary),avg(salary) ,sum(salary) from emp group by deptid;
+here we may get unexpected output 
+
+mysql> select deptid,min(salary), max(salary),avg(salary) ,sum(salary) from emp group by deptid;
++--------+-------------+-------------+-------------+-------------+
+| deptid | min(salary) | max(salary) | avg(salary) | sum(salary) |
++--------+-------------+-------------+-------------+-------------+
+|     10 |       78000 |       85000 |  81666.6667 |      245000 |
+|     12 |       62000 |       84000 |  72666.6667 |      218000 |
+|     13 |       82000 |       82000 |  82000.0000 |       82000 |
++--------+-------------+-------------+-------------+-------------+
+
+
+>select deptid,ename, min(salary), max(salary),avg(salary) ,sum(salary) from emp group by deptid,ename;
+
++--------+---------+-------------+-------------+-------------+-------------+
+| deptid | ename   | min(salary) | max(salary) | avg(salary) | sum(salary) |
++--------+---------+-------------+-------------+-------------+-------------+
+|     10 | ravi    |       85000 |       85000 |  85000.0000 |       85000 |
+|     10 | amit    |       82000 |       82000 |  82000.0000 |       82000 |
+|     12 | mukesh  |       84000 |       84000 |  84000.0000 |       84000 |
+|     10 | dinesh  |       78000 |       78000 |  78000.0000 |       78000 |
+|     12 | manoj   |       72000 |       72000 |  72000.0000 |       72000 |
+|     12 | chnadan |       62000 |       62000 |  62000.0000 |       62000 |
+|     13 | rakesh  |       82000 |       82000 |  82000.0000 |       82000 |
++--------+---------+-------------+-------------+-------------+-------------+
+
+--here we gets the expected output.
+--if 2 ravi is there working on 10 th number dept then both recored will be logically grouped.
+
+ >insert into emp values(1008,'ravi','delhi',55000,10);
+
+mysql> select deptid,ename, min(salary), max(salary),avg(salary) ,sum(salary) from emp group by deptid,ename;
++--------+---------+-------------+-------------+-------------+-------------+
+| deptid | ename   | min(salary) | max(salary) | avg(salary) | sum(salary) |
++--------+---------+-------------+-------------+-------------+-------------+
+|     10 | ravi    |       55000 |       85000 |  70000.0000 |      140000 |
+|     10 | amit    |       82000 |       82000 |  82000.0000 |       82000 |
+|     12 | mukesh  |       84000 |       84000 |  84000.0000 |       84000 |
+|     10 | dinesh  |       78000 |       78000 |  78000.0000 |       78000 |
+|     12 | manoj   |       72000 |       72000 |  72000.0000 |       72000 |
+|     12 | chnadan |       62000 |       62000 |  62000.0000 |       62000 |
+|     13 | rakesh  |       82000 |       82000 |  82000.0000 |       82000 |
++--------+---------+-------------+-------------+-------------+-------------+
+
+
+
+Having clause:
+-------------------
+
+--after group by clause we r not allowed to use where clause, in place of where clause we should use having clause after the group by clause.
+
+--in where clause we can not use group functions. whereas inside having clause we can use group functions.
+
+> select deptid,ename, min(salary), max(salary),avg(salary) ,sum(salary) from emp group by deptid,ename having sum(salary) > 80000;
+
++--------+--------+-------------+-------------+-------------+-------------+
+| deptid | ename  | min(salary) | max(salary) | avg(salary) | sum(salary) |
++--------+--------+-------------+-------------+-------------+-------------+
+|     10 | ravi   |       55000 |       85000 |  70000.0000 |      140000 |
+|     10 | amit   |       82000 |       82000 |  82000.0000 |       82000 |
+|     12 | mukesh |       84000 |       84000 |  84000.0000 |       84000 |
+|     13 | rakesh |       82000 |       82000 |  82000.0000 |       82000 |
++--------+--------+-------------+-------------+-------------+-------------+
+
+using where clause and having clause also:
+---------------------------------------------------
+
+>select deptid, sum(salary) from emp where deptid IN(10,12,14) group by deptid having sum(salary) > 80000;
+
++--------+-------------+
+| deptid | sum(salary) |
++--------+-------------+
+|     10 |      300000 |
+|     12 |      218000 |
++--------+-------------+
+
+
+**Joins:
+======
+
+--Join is used to receive data from multiple tables or by using join we can combine records from multipe tables.
+
+--there are following types of joins:
+
+1.Inner join
+2.Outer Join 
+	-> Left Outer join
+	-> Right Outer join
+	-> full outer join
+3.self join
+
+
+
+4.cross join (cartesion product)
+
+
+Note: when we try to get the data from more than one table without using 
+joining condition. then it is called cross join, in this case every record of the
+first table will be mapped with the every record of the second table.
+
+--with the cross join, we don't get the meaningfull data. in order to get the 
+meaningfull data we need to use other types of joins.
+
+ex...select * from dept,emp;// here there are 8*4=32 record each dept record map with each emp record then there is no meaningful data we get.
+
+note:- without applying any condition we will get cartesion product
+
+INNER JOIN:  **imp
+============
+
+-- getting matching record from more than one table.on cond.
+
+--here we need to apply joining condition on the common data from both table.
+
+recommended---if ambiguity is there in column name (if both table having the same column name)then we need to use alias support.
+
+--this inner join returns the matching records from the DB tables based on the common column.
+
+> select * from dept INNER JOIN emp ON dept.did = emp.deptid;  
+
++-----+-------+----------+------+---------+---------+--------+--------+
+| did | dname | location | eid  | ename   | address | salary | deptid |
++-----+-------+----------+------+---------+---------+--------+--------+
+|  10 | hr    | pune     | 1000 | ravi    | patna   |  85000 |     10 |
+|  10 | hr    | pune     | 1002 | amit    | delhi   |  82000 |     10 |
+|  10 | hr    | pune     | 1004 | dinesh  | mumbai  |  78000 |     10 |
+|  10 | hr    | pune     | 1008 | ravi    | delhi   |  55000 |     10 |
+|  12 | acc   | delhi    | 1003 | mukesh  | pune    |  84000 |     12 |
+|  12 | acc   | delhi    | 1005 | manoj   | delhi   |  72000 |     12 |
+|  12 | acc   | delhi    | 1006 | chnadan | pune    |  62000 |     12 |
+|  13 | sales | chennai  | 1007 | rakesh  | goa     |  82000 |     13 |
++-----+-------+----------+------+---------+---------+--------+--------+
+
+
+Q/- get  the emp details who is working in HR department.
+
+> select eid, ename, address, salary from dept INNER JOIN emp ON dept.did= emp.deptid AND dept.dname = 'HR';
+
++------+--------+---------+--------+
+| eid  | ename  | address | salary |
++------+--------+---------+--------+
+| 1000 | ravi   | patna   |  85000 |
+| 1002 | amit   | delhi   |  82000 |
+| 1004 | dinesh | mumbai  |  78000 |
+| 1008 | ravi   | delhi   |  55000 |
++------+--------+---------+--------+
+
+// if you use * then it will print all coll from both tables
+
+with help of alias:  
+----------------------
+
+select e.eid, e.ename, e.address, e.salary, d.dname from dept d INNER JOIN emp e ON d.did= e.deptid AND d.dname = 'HR';
+
+
+e,d are var
++------+--------+---------+--------+-------+
+| eid  | ename  | address | salary | dname |
++------+--------+---------+--------+-------+
+| 1000 | ravi   | patna   |  85000 | hr    |
+| 1002 | amit   | delhi   |  82000 | hr    |
+| 1004 | dinesh | mumbai  |  78000 | hr    |
+| 1008 | ravi   | delhi   |  55000 | hr    |
++------+--------+---------+--------+-------+
+
+Another syntax of INNER JOIN (without using INNER JOIN command): INNER JOIN == , & ON == where
+=========================================================
+
+> select e.eid, e.ename, e.address, e.salary, d.dname from dept d,emp e where d.did= e.deptid AND d.dname = 'HR';
+
+
+Outer Join:
+==========
+
+a. left outer join:
+---------------------
+
+--to get the unmatched records from the left table use left outer join (it shows the full details of left table and null value for table of any unmatched record)
+
+> select e.eid, e.ename, e.address, e.salary, d.dname from dept d LEFT OUTER JOIN emp e ON d.did= e.deptid;
+
+--here since Marketing dept we don't have any emp then all the dept details will be printed and unmatched emp from that dept will be null value.
+
++------+---------+---------+--------+--------+
+| eid  | ename   | address | salary | dname  |
++------+---------+---------+--------+--------+
+| 1000 | ravi    | patna   |  85000 | hr     |
+| 1002 | amit    | delhi   |  82000 | hr     |
+| 1004 | dinesh  | mumbai  |  78000 | hr     |
+| 1008 | ravi    | delhi   |  55000 | hr     |
+| 1003 | mukesh  | pune    |  84000 | acc    |
+| 1005 | manoj   | delhi   |  72000 | acc    |
+| 1006 | chnadan | pune    |  62000 | acc    |
+| 1007 | rakesh  | goa     |  82000 | sales  |
+| NULL | NULL    | NULL    |   NULL | market |
++------+---------+---------+--------+--------+
+
+
+insert into emp values(1009,'praksh','delhi',85000,null);
+insert into emp values(1010,'vinay','delhi',82000,null);
+
+
+
+mysql> select eid, ename, address, salary from dept INNER JOIN emp ON dept.did= emp.deptid ;
++------+---------+---------+--------+
+| eid  | ename   | address | salary |
++------+---------+---------+--------+
+| 1000 | ravi    | patna   |  85000 |
+| 1002 | amit    | delhi   |  82000 |
+| 1004 | dinesh  | mumbai  |  78000 |
+| 1008 | ravi    | delhi   |  55000 |
+| 1003 | mukesh  | pune    |  84000 |
+| 1005 | manoj   | delhi   |  72000 |
+| 1006 | chnadan | pune    |  62000 |
+| 1007 | rakesh  | goa     |  82000 |
++------+---------+---------+--------+
+
+
+mysql> select e.eid, e.ename, e.address, e.salary, d.dname from dept d LEFT OUTER JOIN emp e ON d.did= e.deptid;
++------+---------+---------+--------+--------+
+| eid  | ename   | address | salary | dname  |
++------+---------+---------+--------+--------+
+| 1000 | ravi    | patna   |  85000 | hr     |
+| 1002 | amit    | delhi   |  82000 | hr     |
+| 1004 | dinesh  | mumbai  |  78000 | hr     |
+| 1008 | ravi    | delhi   |  55000 | hr     |
+| 1003 | mukesh  | pune    |  84000 | acc    |
+| 1005 | manoj   | delhi   |  72000 | acc    |
+| 1006 | chnadan | pune    |  62000 | acc    |
+| 1007 | rakesh  | goa     |  82000 | sales  |
+| NULL | NULL    | NULL    |   NULL | market |
++------+---------+---------+--------+--------+
+
+
+
+Right Outer Join:
+---------------------
+
+--to get the unmatched records from the right table use the right outer join (It shows all the details of right table and null values for the left table).
+
+>select e.eid, e.ename, e.address, e.salary, d.dname from dept d RIGHT OUTER JOIN emp e ON d.did= e.deptid;
+
++------+---------+---------+--------+---------+
+| eid  | ename   | address | salary | dname   |
++------+---------+---------+--------+---------+
+| 1000 | ravi    | patna   |  85000 | HR      |
+| 1002 | amit    | delhi   |  82000 | HR      |
+| 1003 | mukesh  | pune    |  84000 | Account |
+| 1004 | dinesh  | mumbai  |  78000 | HR      |
+| 1005 | manoj   | delhi   |  72000 | Account |
+| 1006 | chnadan | pune    |  62000 | Account |
+| 1007 | rakesh  | goa     |  82000 | Sales   |
+| 1008 | ravi    | delhi   |  55000 | HR      |
+| 1009 | praksh  | delhi   |  85000 | NULL    |
+| 1010 | vinay   | delhi   |  82000 | NULL    |
++------+---------+---------+--------+---------+
+
+
+Full outer join:  ( combination of both)
+------------------
+
+--it displays the null values from both side for all the unmatched records.
+
+Note: mysql does not support full outer join.
+
+--in order to use full outer join in mysql, then we should use union of left outer join and right outer join.
+
+> select e.eid, e.ename, e.address, e.salary, d.dname from dept d Left OUTER JOIN emp e ON d.did= e.deptid union  select e.eid, e.ename, e.address, e.salary, d.dname from dept d Right OUTER JOIN emp e ON d.did= e.deptid;
+
+
++------+---------+---------+--------+--------+
+| eid  | ename   | address | salary | dname  |
++------+---------+---------+--------+--------+
+| 1000 | ravi    | patna   |  85000 | hr     |
+| 1002 | amit    | delhi   |  82000 | hr     |
+| 1004 | dinesh  | mumbai  |  78000 | hr     |
+| 1008 | ravi    | delhi   |  55000 | hr     |
+| 1003 | mukesh  | pune    |  84000 | acc    |
+| 1005 | manoj   | delhi   |  72000 | acc    |
+| 1006 | chnadan | pune    |  62000 | acc    |
+| 1007 | rakesh  | goa     |  82000 | sales  |
+| NULL | NULL    | NULL    |   NULL | market |
+| 1009 | praksh  | delhi   |  85000 | NULL   |
+| 1010 | vinay   | delhi   |  82000 | NULL   |
++------+---------+---------+--------+--------+
+
+mysql> select dname from dept union select ename from emp;
++---------+
+| dname   |
++---------+
+| hr      |
+| acc     |
+| sales   |
+| market  |----do seperate vertically from here
+| ravi    |
+| amit    |
+| mukesh  |
+| dinesh  |
+| manoj   |
+| chnadan |
+| rakesh  |
+| praksh  |
+| vinay   |
+
+
+
+                 CONCLUSION:-
+
+INNER JOIN---- only matching record
+
+left outer join--- from left side of table entire record will be printed and if it not match with any record with right table then it will show null.
+
+right outer join--- from right side of table entire record will be printed and if it not match with any record with left table then it will show null.
+
+
+Self join:
+========
+
+--here we use joining a table to itself.
+
+--here joining condition column must belongs to same datatype.
+
+Note: --if we want to compare two tables same columns values then we use INNER JOIN where as if want to compare 2 diff column values within a single table then we must use self join.
+
+**whenever a table contains hirarical data then only we allow to use 
+self join.
+
+emp ------> manager 
+student ---> monitor
+
+--when we use self join, we must take the support of alias.
+
+create table employee(
+eid int primary key,
+ename varchar(12),
+salary int,
+mgr int         //manager alloted id
+);
+
+
+mysql> insert into employee values(10,'Ram', 8000,null); // Ram does not have any manager
+
+mysql> insert into employee values(11,'Ravi', 8200,10); // Ravi manager is Ram
+
+mysql> insert into employee values(12,'amit', 8500,10); // Amit manager is Ram
+
+mysql> insert into employee values(14,'sunil', 8700,11);// Sunil manager is Ravi
+
++-----+-------+--------+------+
+| eid | ename | salary | mgr  |
++-----+-------+--------+------+
+|  10 | Ram   |   8000 | NULL |
+|  11 | Ravi  |   8200 |   10 |
+|  12 | amit  |   8500 |   10 |
+|  14 | sunil |   8700 |   11 |
++-----+-------+--------+------+
+
+Q/- display the employee name and thier manager name.
+
+--here we need to use self join. 
+
+
+> select e2.ename EMPLOYEE, e1.ename MANAGER from employee e1 ,employee e2 where e1.eid = e2.mgr;
+
+note--SELF JOIN && ON keyword not work in mysql related to selfjoin
+
++----------+---------+
+| EMPLOYEE | MANAGER |
++----------+---------+
+| Ravi     | Ram     |
+| amit     | Ram     |
+| sunil    | Ravi    |
++----------+---------+
+
+
+Getting the data from 3 tables:
+=======================
+
+create table course(
+
+cid int primary key,
+cname varchar(12),
+fee int
+);
+
+> insert into course values(1,'java',8000);
+  insert into course values(2,'spring',8500);
+  insert into course values(3,'hibernate',8200);
+  insert into course values(4,'springBoot',9200);
+
+ +-----+------------+------+
+| cid | cname      | fee  |
++-----+------------+------+
+|   1 | java       | 8000 |
+|   2 | spring     | 8500 |
+|   3 | hibernate  | 8200 |
+|   4 | springBoot | 9200 |
++-----+------------+------+
+
+
+create table teacher(
+tid int primary key,
+tname varchar(12),
+taddress varchar(12),
+course_id int,
+foreign key (course_id) references course(cid)
+);
+
+>insert into teacher values(100,'ramesh','delhi',1);
+ insert into teacher values(101,'anand','delhi',1);
+ insert into teacher values(102,'sunil','mumbai',2);
+ insert into teacher values(103,'pravin','pune',3);
+
+  +-----+--------+----------+-----------+
+| tid | tname  | taddress | course_id |
++-----+--------+----------+-----------+
+| 100 | ramesh | delhi    |         1 |
+| 101 | anand  | delhi    |         1 |
+| 102 | sunil  | mumbai   |         2 |
+| 103 | pravin | pune     |         3 |
++-----+--------+----------+-----------+
+
+create table students(
+
+roll int primary key,
+sname varchar(12),
+saddress varchar(12),
+course_id int,
+foreign key (course_id) references course(cid)
+);
+
+
+insert into students values(1000,'st1','delhi',1);
+ insert into students values(1001,'st2','delhi',1);
+ insert into students values(1002,'st3','delhi',2);
+insert into students values(1003,'st4','delhi',3);
+
++------+-------+----------+-----------+
+| roll | sname | saddress | course_id |
++------+-------+----------+-----------+
+| 1000 | st1   | delhi    |         1 |
+| 1001 | st2   | delhi    |         1 |
+| 1002 | st3   | delhi    |         2 |
+| 1003 | st4   | delhi    |         3 |
++------+-------+----------+-----------+
+
+Q/ get the details of all the students who is taught by Ramesh.
+
+> select s.roll, s.sname, s.saddress, t.tname 
+from 
+course c INNER JOIN teacher t INNER JOIN students s
+ ON
+c.cid = t.course_id AND c.cid = s.course_id AND t.tname = 'Ramesh';
+
+
+
++------+-------+----------+--------+
+| roll | sname | saddress | tname  |
++------+-------+----------+--------+
+| 1000 | st1   | delhi    | ramesh |
+| 1001 | st2   | delhi    | ramesh |
++------+-------+----------+--------+
+
