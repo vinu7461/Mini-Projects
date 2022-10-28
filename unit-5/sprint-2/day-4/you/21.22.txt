@@ -1,0 +1,693 @@
+Subqueries:
+==========
+
+--a query inside another query is called subquery or nested query.
+
+--sub queries are used to retrive the data from single table or multiple tables based on more than one step process.
+
+--here outer query is called parent query and inner query is called child query.
+
+--child query will execute first then only parent query will be executed.
+
+child query : it provides values/data to the parent query.
+
+parent query : it receives the values/data from the child query.
+
+                           RULES:
+
+1. in child query we can not use order by clause ,but in parent query we can use.
+
+2.group by caluse we can use in both child query and parent query as well.
+
+
+Subqueries(SQ) we can categories into following categories:
+-------------------------------------------------------------------
+
+1. single row and single col SQ : scalar value SQ 
+(that means your child query will return a single row & column i.e only one data)
+
+2. multiple row and single col SQ.
+
+3. multiple col SQ
+
+
+1. single row and single col SQ : scalar value SQ:  imp..
+----------------------------------------------------------
+
+--here child query will return only a single value to the parent query
+
+--here mostly same col name which is in the where clause of the parent query, will be there inside the select clause of child query.
+
+mysql> select * from dept;
++-----+--------+----------+
+| did | dname  | location |
++-----+--------+----------+
+|  10 | hr     | pune     |
+|  12 | acc    | delhi    |
+|  13 | sales  | chennai  |
+|  14 | market | mumbai   |
++-----+--------+----------+
+
+mysql> select * from emp;
++------+---------+---------+--------+--------+
+| eid  | ename   | address | salary | deptid |
++------+---------+---------+--------+--------+
+| 1000 | ravi    | patna   |  85000 |     10 |
+| 1002 | amit    | delhi   |  82000 |     10 |
+| 1003 | mukesh  | pune    |  84000 |     12 |
+| 1004 | dinesh  | mumbai  |  78000 |     10 |
+| 1005 | manoj   | delhi   |  72000 |     12 |
+| 1006 | chnadan | pune    |  62000 |     12 |
+| 1007 | rakesh  | goa     |  82000 |     13 |
+| 1008 | ravi    | delhi   |  55000 |     10 |
+| 1009 | praksh  | delhi   |  85000 |   NULL |
+| 1010 | vinay   | delhi   |  82000 |   NULL |
++------+---------+---------+--------+--------+
+
+Q/- WAQ to display emp details who is working in HR dept.
+
+A/- using join.
+
+> select e.eid, e.ename, e.address, e.salary 
+from dept d INNER JOIN emp e
+ON
+d.did = e.deptid AND d.dname = 'HR';
+
++------+--------+---------+--------+
+| eid  | ename  | address | salary |
++------+--------+---------+--------+
+| 1000 | ravi   | patna   |  85000 |
+| 1002 | amit   | delhi   |  82000 |
+| 1004 | dinesh | mumbai  |  78000 |
+| 1008 | ravi   | delhi   |  55000 |
++------+--------+---------+--------+
+ 
+using SQ:
+------------
+
+parent----child(lhs---rhs)child give 10 here
+
+>select * from emp where deptid = (select did from dept where dname ='HR');
+
++------+--------+---------+--------+--------+
+| eid  | ename  | address | salary | deptid |
++------+--------+---------+--------+--------+
+| 1000 | ravi   | patna   |  85000 |     10 |
+| 1002 | amit   | delhi   |  82000 |     10 |
+| 1004 | dinesh | mumbai  |  78000 |     10 |
+| 1008 | ravi   | delhi   |  55000 |     10 |
++------+--------+---------+--------+--------+
+
+Q/- WAQ to display emp details who is working with mukesh.
+
+> select * from emp where deptid= (select deptid from emp where ename = 'mukesh');
+
+rhs==here child will give mukesh dept no ie 12;
+
++------+---------+---------+--------+--------+
+| eid  | ename   | address | salary | deptid |
++------+---------+---------+--------+--------+
+| 1003 | mukesh  | pune    |  84000 |     12 |
+| 1005 | manoj   | delhi   |  72000 |     12 |
+| 1006 | chnadan | pune    |  62000 |     12 |
++------+---------+---------+--------+--------+
+
+note--if 2 same name people work in diff dept then it will give 2 value (error) so we may use multiple row and single col sq; 
+
+Q/- WAQ to display emp details who is getting more sal than avg of emp table.
+
+> select * from emp where salary > (select avg(salary) from emp);
+
+rhs==here child will give avg(salary)
+
++------+--------+---------+--------+--------+
+| eid  | ename  | address | salary | deptid |
++------+--------+---------+--------+--------+
+| 1000 | ravi   | patna   |  85000 |     10 |
+| 1002 | amit   | delhi   |  82000 |     10 |
+| 1003 | mukesh | pune    |  84000 |     12 |
+| 1004 | dinesh | mumbai  |  78000 |     10 |
+| 1007 | rakesh | goa     |  82000 |     13 |
+| 1009 | praksh | delhi   |  85000 |   NULL |
+| 1010 | vinay  | delhi   |  82000 |   NULL |
++------+--------+---------+--------+--------+
+
+
+Q/- WAQ to display second highest salaried employe details.
+
+first highest salaries employee:
+> select * from emp where salary = (select max(salary) from emp);
+
++------+--------+---------+--------+--------+
+| eid  | ename  | address | salary | deptid |
++------+--------+---------+--------+--------+
+| 1000 | ravi   | patna   |  85000 |     10 |
+| 1009 | praksh | delhi   |  85000 |   NULL |
++------+--------+---------+--------+--------+
+
+second highest salaries employee:
+> select * from emp where salary = (select max(salary) from emp where salary < (select max(salary) from emp) );
+
++------+--------+---------+--------+--------+
+| eid  | ename  | address | salary | deptid |
++------+--------+---------+--------+--------+
+| 1003 | mukesh | pune    |  84000 |     12 |
++------+--------+---------+--------+--------+
+
+third highest salaries employee:
+
+
+mysql> select * from emp where salary =(select max(salary) from emp where salary < (select max(salary) from emp where  salary < (select max(salary) from emp) ));
++------+--------+---------+--------+--------+
+| eid  | ename  | address | salary | deptid |
++------+--------+---------+--------+--------+
+| 1002 | amit   | delhi   |  82000 |     10 |
+| 1007 | rakesh | goa     |  82000 |     13 |
+| 1010 | vinay  | delhi   |  82000 |   NULL |
++------+--------+---------+--------+--------+
+
+
+note--if you want to find 5..6 highest sal then it is to lendhy so we have to use some other query..(no nested query)
+
+
+
+mysql> select * from employee;
++-----+-------+--------+------+
+| eid | ename | salary | mgr  |
++-----+-------+--------+------+
+|  10 | Ram   |   8000 | NULL |
+|  11 | Ravi  |   8200 |   10 |
+|  12 | amit  |   8500 |   10 |
+|  14 | sunil |   8700 |   11 |
++-----+-------+--------+------+
+
+Q/- WAQ to display details of employee whoc is working under Ram.
+
+>select * from employee where mgr = (select eid from employee where ename = 'Ram');
+
++-----+-------+--------+------+
+| eid | ename | salary | mgr  |
++-----+-------+--------+------+
+|  11 | Ravi  |   8200 |   10 |
+|  12 | amit  |   8500 |   10 |
++-----+-------+--------+------+
+
+
+
+             2. multiple row and single col SQ:
+                 ===========================
+
+--In multi-row, single-col SQ, child query will return multiple rows and a single column to the parent query.
+
+--In this case in the parent query we should use one of the following operators:(single col multi row)
+
+IN
+ANY
+ALL
+
+ex:
+					
+>select * from emp where salary IN (select salary from emp where eid > 1004);
+					10000,  20000, 50000
+> select * from emp where salary = ANY (select salary from emp where eid > 1000);
+					10000,  20000, 50000
+>select * from emp where salary > ANY (select salary from emp where eid > 1000);
+
+>select * from emp where salary < ANY (select salary from emp where eid > 1000);
+
+
+=================================================================
+
+
+mysql> update emp set deptid=14 where eid=1008;
+
+mysql> select * from emp;
++------+---------+---------+--------+--------+
+| eid  | ename   | address | salary | deptid |
++------+---------+---------+--------+--------+
+| 1000 | ravi    | patna   |  85000 |     10 |
+| 1002 | amit    | delhi   |  82000 |     10 |
+| 1003 | mukesh  | pune    |  84000 |     12 |
+| 1004 | dinesh  | mumbai  |  78000 |     10 |
+| 1005 | manoj   | delhi   |  72000 |     12 |
+| 1006 | chnadan | pune    |  62000 |     12 |
+| 1007 | rakesh  | goa     |  82000 |     13 |
+| 1008 | ravi    | delhi   |  55000 |     14 |
+| 1009 | praksh  | delhi   |  85000 |   NULL |
+| 1010 | vinay   | delhi   |  82000 |   NULL |
++------+---------+---------+--------+--------+
+
+mysql> select * from emp where deptid= (select deptid from emp where ename = 'ravi');
+ERROR 1242 (21000): Subquery returns more than 1 row
+
+
+mysql> select * from emp where deptid IN (select deptid from emp where ename = 'ravi');
++------+--------+---------+--------+--------+
+| eid  | ename  | address | salary | deptid |
++------+--------+---------+--------+--------+
+| 1000 | ravi   | patna   |  85000 |     10 |
+| 1002 | amit   | delhi   |  82000 |     10 |
+| 1004 | dinesh | mumbai  |  78000 |     10 |
+| 1008 | ravi   | delhi   |  55000 |     14 |
++------+--------+---------+--------+--------+
+=================================================================
+
+IN : it check equal to any number in the list (using OR)
+
+ANY : it compare any value in the list
+
+ALL : it compares all values in the list
+
+ex:
+
+salary > any (----); here it checks salary should be greater than any of the 4 values in the list.
+
+salary > all (----); here it checks salary should be greater than all of the 4 values in the list.
+
+
+   any (10, 20 , 30, 40)
+
+ex:
+
+< any(): less than any : less than maximum.           (like 1 to 39)
+
+> any() : greater than any : greater than  minimum.   (like 11 to infinity)
+
+= any() : equal to any : it is equal to IN operator.  (like 10,20,30,40 only)
+
+
+all:
+----
+
+  all (10, 20 , 30, 40)
+
+< all() : less than all : less than minimum       (like <10)
+
+>all (): greater than all : greater than maximum  (like >40)
+
+=all(): equal to all : it is meaningless (because one value can not equal to multiple values)
+
+
+
+Q/- WAQ to display the emp who is getting max salary in each dept.
+
+
+getting the max salary emp from emp table dept wise.
+-----------------------------------------------------------------
+
+>  select deptid, max(salary) from emp group by deptid;
++--------+-------------+
+| deptid | max(salary) |
++--------+-------------+
+|   NULL |       85000 |
+|     10 |       85000 |
+|     12 |       84000 |
+|     13 |       82000 |
+|     14 |       55000 |
++--------+-------------+
+
+>select * from emp where salary IN (select max(salary) from emp group by deptid);
+
++------+--------+---------+--------+--------+
+| eid  | ename  | address | salary | deptid |
++------+--------+---------+--------+--------+
+| 1000 | ravi   | patna   |  85000 |     10 |
+| 1002 | amit   | delhi   |  82000 |     10 |
+| 1003 | mukesh | pune    |  84000 |     12 |
+| 1007 | rakesh | goa     |  82000 |     13 |
+| 1008 | ravi   | delhi   |  55000 |     14 |
+| 1009 | praksh | delhi   |  85000 |   NULL |
+| 1010 | vinay  | delhi   |  82000 |   NULL |
++------+--------+---------+--------+--------+
+
+here it is considering salary in range (or operator)
+
+
+
+Que== how to see max sal and dept name as well ( we have to use 2 col so use multi col SQ) 
+
+                 3. multiple col SQ:
+                  =================
+
+
+--if we try to compare multiple col values of the child query with the multiple column values of the parent query then we use this type of query.
+
+syntax:
+
+select * from tab_name where (col1, col2, ...) IN (select col1, col2,... from table where condition);
+
+
+
+note--condition is not necessary but col mention in select clause must be there in where clause;
+
+
+
+
+mysql> update emp set salary=84000 where eid=1006;
+
+
+Q/ WAQ to display the emp details whose salary and deptid matches with   salary and deptid of Ram.
+
+> select * from emp where (salary, deptid) IN (select salary, deptid from emp where ename = 'mukesh');
+
++------+---------+---------+--------+--------+
+| eid  | ename   | address | salary | deptid |
++------+---------+---------+--------+--------+
+| 1003 | mukesh  | pune    |  84000 |     12 |
+| 1006 | chnadan | pune    |  84000 |     12 |
++------+---------+---------+--------+--------+
+
+Q= If we want the name of department and employ name where salary is maximum  for that dept then we have to join both the tables along with applying sub query ...please show one such example
+
+d.dname, e. ename deptwise max salary
+
+
+
+>select deptid, max(salary) from emp group by deptid;
+
++--------+-------------+
+| deptid | max(salary) |
++--------+-------------+
+|   NULL |       85000 |
+|     10 |       85000 |
+|     12 |       84000 |
+|     13 |       82000 |
+|     14 |       55000 |
++--------+-------------+
+
+>select  d.did ,d.dname, e.ename from dept d INNER JOIN emp e ON d.did = e.deptid AND  salary IN (select max(salary) from emp group by deptid);
+
++-----+--------+---------+
+| did | dname  | ename   |
++-----+--------+---------+
+|  10 | hr     | ravi    |
+|  10 | hr     | amit    |
+|  12 | acc    | mukesh  |
+|  12 | acc    | chnadan |
+|  13 | sales  | rakesh  |
+|  14 | market | ravi    |
++-----+--------+---------+
+
+
+                SQ in DML (insert, update,delete)
+               ==================================
+
+            SQ in insert:
+           --------------
+
+>create table x1(id int, name varchar(12));
+
+>insert into x1 (select eid, ename from emp);
+
+mysql> select * from x1;
++------+---------+
+| id   | name    |
++------+---------+
+| 1000 | ravi    |
+| 1002 | amit    |
+| 1003 | mukesh  |
+| 1004 | dinesh  |
+| 1005 | manoj   |
+| 1006 | chnadan |
+| 1007 | rakesh  |
+| 1008 | ravi    |
+| 1009 | praksh  |
+| 1010 | vinay   |
++------+---------+
+
+ truncate x1;
+
+>insert into x1 values(100, (select ename from emp where eid=1000));
+
+mysql> select * from x1;
++------+------+
+| id   | name |
++------+------+
+|  100 | ravi |
++------+------+
+
+
+             SQ in update:
+          ------------------
+
+**here SQ is allowed inside where clause or Set clause also.
+
+ex:
+
+>update x1 set name = (select ename from emp where eid=1000) where id = (select eid from emp where name='chandan');
+
+             SQ in delete:
+          ------------------
+
+> delete from x1 where id = (select eid from emp where enam ='amit');
+
+
+Autoincrement in mysql:
+====================
+
+--this is for auto generated id field.
+
+--mysql supports auto_increment where as Oracle db uses sequence concept to auto generate the ID field.
+
+create table student
+(
+roll int primary key auto_increment,
+name varchar(12),
+marks int
+);
+
+> insert into student (name,marks) values ('n1',500);
+
+> insert into student (name,marks) values ('n2',600);
+
+> select * from student;
++------+------+-------+
+| roll | name | marks |
++------+------+-------+
+|    1 | n1   |   500 |
+|    2 | n2   |   600 |
++------+------+-------+
+
+
+> alter table student auto_increment=1000;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+> insert into student (name,marks) values ('n3',700);
+
+> select * from student;
++------+------+-------+
+| roll | name | marks |
++------+------+-------+
+|    1 | n1   |   500 |
+|    2 | n2   |   600 |
+| 1000 | n3   |   700 |-this time auto_incr start from 1000
++------+------+-------+
+
+>insert into student values(50,'n4',800);
+
+>insert into student (name,marks) values('n5',900);
+
+ select * from student;
++------+------+-------+
+| roll | name | marks |
++------+------+-------+
+|    1 | n1   |   500 |
+|    2 | n2   |   600 |
+|   50 | n4   |   800 |--
+| 1000 | n3   |   700 |
+| 1001 | n5   |   900 |-- project in order
++------+------+-------+
+
+>alter table emp modify eid int primary key auto_increment;
+
+Limit :
+--------
+
+>select * from emp LIMIT 4;
+
++------+--------+---------+--------+--------+
+| eid  | ename  | address | salary | deptid |
++------+--------+---------+--------+--------+
+| 1000 | ravi   | patna   |  85000 |     10 |
+| 1002 | amit   | delhi   |  82000 |     10 |-4 record from
+| 1003 | mukesh | pune    |  84000 |     12 | top
+| 1004 | dinesh | mumbai  |  78000 |     10 |
++------+--------+---------+--------+--------+
+
+getting record from 3 -6th row
+
+> select * from emp LIMIT 4 OFFSET 2;
+
++------+---------+---------+--------+--------+
+| eid  | ename   | address | salary | deptid |
++------+---------+---------+--------+--------+
+| 1003 | mukesh  | pune    |  84000 |     12 |
+| 1004 | dinesh  | mumbai  |  78000 |     10 |
+| 1005 | manoj   | delhi   |  72000 |     12 |
+| 1006 | chnadan | pune    |  84000 |     12 |
++------+---------+---------+--------+--------+
+
+note--you can use limit after geting result no cond will be there after limit.
+
+*****relationship among tables:
+        ====================
+--at class level we have 2 type of relationship :
+
+is A relationship & has A relationship.
+
+--at table level we have 3 type of relationships:
+
+1. One to One ( Person ---> DriveL, Person ---> AadharCard, Husband -wife )
+
+2. One to Many (Father -- child, Dept ---> emp , School ---> students, )
+
+3. Many to Many ( Student-- Course , Book---Author , Movies ---> actors )
+
+
+OTO :
+=======
+
+Person (pid, pname, address, mobile, email)
+
+DL (dlid, issueDate, expirationDate, RTO, pid (FK)----> refer Person(pid)  )
+
+here we need to make FK column of the DL table as unique.
+(bez two person dont have same DL)
+
+create table person
+(
+pid int primary key,
+pname varchar(12),
+address varchar(12),
+mobile varchar(10),
+email varchar(12)
+);
+
+create table DL 
+(
+dlid int primary key,
+issueDate date,
+expDate date,
+rto varchar(12),
+pid int unique,--
+foreign key(pid) references Person (pid)
+);
+
+
+OTM:
+======
+
+dept (did, dname, location)
+emp (eid, ename, address, salary, deptid ---FK refer dept(did));
+
+MTM:
+=======
+
+create table student
+(
+roll int primary key,
+sname varchar(12),
+address varchar(12),
+mobile varchar(12)
+);
+
+
+create table course
+(
+cid int primary key,
+cname varchar(12),
+fee int,
+duration varchar(12)
+);
+
+**Note: Whenever we have MTM relationship is there we need to take the support  of a 3rd linking table.
+
+student_course(cid, roll);
+
+create table student_course
+(
+roll int,
+cid int,
+foreign key (roll) references student(roll),
+foreign key (cid) references course(cid)
+);
+
+
+> insert into student values(1,'ram','delhi','787878');
+> insert into student values(2,'ramesh','delhi','929292');
+> insert into student values(3,'venkat','vizag','4545454');
+> insert into student values(4,'rajiv','hyd','161616');
+
+
+mysql> select * from student;
++------+--------+---------+---------+
+| roll | sname  | address | mobile  |
++------+--------+---------+---------+
+|    1 | ram    | delhi   | 787878  |
+|    2 | ramesh | delhi   | 929292  |
+|    3 | venkat | vizag   | 4545454 |
+|    4 | rajiv  | hyd     | 161616  |
++------+--------+---------+---------+
+
+
+> insert into course values(1000,'java',8500,'45-day');
+> insert into course values(1001,'spring',8700,'45-day');
+> insert into course values(1002,'hibernate',9500,'35-day');
+> insert into course values(1003,'sql',6500,'35-day');
+
+select * from course;
++------+-----------+------+----------+
+| cid  | cname     | fee  | duration |
++------+-----------+------+----------+
+| 1000 | java      | 8500 | 45-day   |
+| 1001 | spring    | 8700 | 45-day   |
+| 1002 | hibernate | 9500 | 35-day   |
+| 1003 | sql       | 6500 | 35-day   |
++------+-----------+------+----------+
+
+
+---------------------------------------------------------
+**now i want to enroll some students into perticular course
+---------------------------------------------------------
+
+>insert into student_course values(1,1000);
+>insert into student_course values(1,1001);
+>insert into student_course values(2,1000);
+>insert into student_course values(3,1000);
+>insert into student_course values(3,1003);
+
+
+select * from student_course;
++------+------+
+| roll | cid  |
++------+------+
+|    1 | 1000 |
+|    1 | 1001 |
+|    2 | 1000 |
+|    3 | 1000 |
+|    3 | 1003 |
++------+------+
+
+--here one student enroll in multi courses and in one course multi students enroll so it is many to many relationship.
+
+-- to fetch data we have to join 3 tables here
+
+
+
+Q/ getting the Student details who enrolled in Java.
+
+>select s.roll, s. sname, s.address ,s.mobile, c.cname,c.fee ,c.duration from student s INNER JOIN course c INNER JOIN student_course sc 
+ON
+s.roll = sc.roll AND c.cid = sc.cid AND c.cname = 'Java';
+
+
+
++------+--------+---------+---------+-------+------+----------+
+| roll | sname  | address | mobile  | cname | fee  | duration |
++------+--------+---------+---------+-------+------+----------+
+|    1 | ram    | delhi   | 787878  | java  | 8500 | 45-day   |
+|    2 | ramesh | delhi   | 929292  | java  | 8500 | 45-day   |
+|    3 | venkat | vizag   | 4545454 | java  | 8500 | 45-day   |
++------+--------+---------+---------+-------+------+----------+
+
