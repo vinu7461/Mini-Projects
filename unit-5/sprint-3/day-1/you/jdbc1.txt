@@ -1,0 +1,260 @@
+JDBC:    Java Database Connectivity
+====== 
+
+--Java Mostly used in industry to develop Business application.
+
+--common and general things required in a business application:
+
+1. maintaining the business data permanently in a secure and easily retrival manner.
+
+2. processing the data according to the business rules.
+
+3. presenting the data to the user in user understandable format.
+
+
+--we store the business data for a typical business application inside RDBMS s/w.
+
+no sql (mongodb) ----> JSON format
+
+
+Q/- Why Java-DB communication is required ?
+
+A/-
+
+RDBMS are excellent in data storage in a secure and easily retrival manner, but it is very poor in processing and presenting the data in user-understandable format.
+
+--Java is excellent in processing the data and presenting the data, but Java is very poor in storing the data 
+(In Java we can store the business data permanently using Serialization and Files)
+
+--so inorder to develop a powerfull business application we need to communicate our Java Application with the DB server.
+
+
+Q/- How Java DB communication is possible ?
+
+A/-
+
+--Java App can do any task only through the method calls and objects, 
+these method calls and object are not directly understandable to the DB s/w.
+
+--DB s/w can understands only sql, Java Compiler does not accept the sql syntax directly.
+
+--Inspite of hetergenious platform Java-DB communication is possible through the JDBC.
+
+
+Chinese ------translator-----------Russian 
+
+Java -------- Jdbc driver s/w -----------------DB s/w
+
+
+
+JDBC is a technology that enables any kind of Java application to communicate with any kind of DB s/w in a standard manner.
+
+
+Jdbc technology is given by Sun-microsystem(Oracle Corp)
+
+
+JDBC technology comes in the form of a specification (It is a documentation which describes rules and guidelines to develop a perticular s/w : "jdbc driver s/w").
+
+
+--JDBC driver s/w is the implementation of the JDBC specification, which will act as a translator s/w to communicate Java App with the DB s/w.
+
+--Each DB s/w have their own JDBC driver s/w, so DB vendor will implement the 
+JDBC specification and they develop the JDBC driver s/w.
+
+--these driver s/w comes in the form of a .jar file.
+
+
+Mysql:   mysql-connector.jar
+
+Oracle : ojdbc6.jar
+
+Postgres : postgress.jar
+
+--all the jdbc driver s/w is developed according the the same JDBC specification.
+
+
+RatanDB:         Java Developer 
+
+driver for RatanDB: 
+
+ratandb.jar 
+
+MyClass.getconn()
+submit(sql)
+getData() 
+
+--if we develop the ratandb.jar (driver s/w according to the JDBC specification)
+then any Java developer can communicate with the our DB s/w in a standard manner.
+
+
+Java Application {
+
+classes 
+methods 
+interface 
+
+}
+
+--compile all the .java files -----> .class files ----> zip all the .class files inside a .jar file
+
+
+ratanapp {
+A.java
+B.java
+Demo.java
+} // after compilation and creating a jar files (a1.jar)
+
+
+
+class X{ // here we need to set a1.jar file in the classpath of our application 
+	// then only the jar file related classes will available inside this class
+main(){
+A a1= new A();
+
+
+}
+
+}
+
+
+
+--in order to communicate our Java application with the DB server, Java
+developer need to get/download Jdbc driver s/w and need to add the jdbc driver related 
+jar file in the classpath of our application.
+
+
+
+--In order to communicate our java appplication with the DB server, Java Developer needs 2 things:
+
+1.JDBC driver related jar file
+
+2.jdbc API (this api comes in the form of following 2 packages):
+
+1.java.sql
+2.javax.sql
+
+--this JDBC API contains all the library classes, interfaces using which we can communicate our java application with the DB server.
+
+Note: Jdbc API comes along with the JDK installation.
+
+
+JDBC client:
+==========
+
+--In Java DB communication, our Java application will act as a client becoz Java application needs the services of DB server. so our Java app is a Jdbc client.
+
+
+Responsibility of the JDBC client:
+===========================
+
+1. Reqesting the DB connection.
+
+2. Submitting the appropriate SQL statement to the DB server in the form of String object.
+
+3. Processing the result given by the DB server.
+
+4. Dealing with exceptions if any.
+
+5. Manging the transactions whenever it is required.
+
+6. closing the connection once done with the DB operation.
+
+
+JDBC driver:
+==========
+
+--it is a translation s/w written in Java according to the Jdbc Specification
+(it comes in the form of .jar file)
+
+Responsibility of Jdbc Driver :
+=======================
+
+1. establishing the connection.
+
+2. receiving the jdbc method calls (java method call) and translate them
+into the DB understandable format (sql) and forward them to the DB server.
+
+3. Translating the DB s/w given result in the the Java format (Java objects) and returns that object to the JDBC client.
+
+
+Steps to connect our Java application with the DB server (Mysql):
+=================================================
+
+1. download/get the Jdbc driver related jar file (mysql-connector.jar) from the 
+internat and set that jar file inside the classpath of our java application.
+
+2. Load the jdbc driver related main class into the memory.
+
+3. Prepare the connection String.
+
+4. Establish the connection
+
+5. after performing the CRUD operation close the connection.
+
+
+Getting the mysql-connector jar and setting that jar to the classpath of our application:
+===================================================================
+
+--type in google : mysql-connector mvn
+
+
+--right click on the project---> build path ----> configure build path----> libraries----> Classpath --->Add external jars ----> select the downloaded jar file ---> apply and close.
+
+
+Demo.java:
+=========
+
+package com.masai;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+import com.mysql.cj.jdbc.exceptions.SQLError;
+
+public class Demo {
+
+	public static void main(String[] args) {
+		
+		//Loading the Driver related main class into the memory
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Could not load the Driver main class");
+		}
+		
+
+		String url = "jdbc:mysql://localhost:3306/web20sb101db";
+		
+		try {
+			Connection conn=  DriverManager.getConnection(url,"root","root");
+			
+			if(conn != null)
+				System.out.println("connected...");
+			else
+				System.out.println("not connected..");
+		
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
